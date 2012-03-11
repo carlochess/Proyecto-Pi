@@ -4,6 +4,16 @@ public class objKnight extends objChessPieces {
     public void objKnight() {
     }
     
+    /**
+    * Verifica si el caballo se puede mover hasta cierta psoción
+ * 2N, 1E : Dos casillas norte, una al este.
+ *
+ * @param  Fila_Inicial Fial en la que inicia el caballo.
+ * @param  name the location of the image, relative to the url argument
+ * @return      Si es posible o no el movimiento
+ * @see         Image
+ */
+
     public boolean legalMove(int startRow, int startColumn, int desRow, int desColumn, int[][] playerMatrix) {
         
         finalDesRow = desRow;
