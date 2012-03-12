@@ -1,7 +1,0 @@
-#!/bin/bash
-
-for J in *.java
-do
-	basename $J
-		
-done
