@@ -32,11 +32,15 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         this.addMouseMotionListener(this);
         
     }
+<<<<<<< HEAD
     //Siver para cambiar los mensajes que vez en el tablero
     /**
      * Cambia los mensajes que aparecen debajo del Tablero
      * @return Estado Retorna el estado del juego, sea terminado, sin comenzar o el turno Correspondiente
      */
+=======
+    //Sirve para cambiar los mensajes que vez en el tablero
+>>>>>>> PrimeraModificación
     private String getPlayerMsg() {
         
         if (hasWon) {

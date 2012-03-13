@@ -30,7 +30,7 @@ public class objChessPieces {
         
         if (playerMatrix[newRow][newColumn] != 0) {//Si no esta vacia
             
-            strErrorMsg = "La pieeza esta bloqueando el camino";
+            strErrorMsg = "La pieza esta bloqueando el camino";
             return false;
             
         }
