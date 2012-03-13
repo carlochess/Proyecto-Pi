@@ -32,13 +32,11 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         this.addMouseMotionListener(this);
         
     }
-
     //Siver para cambiar los mensajes que vez en el tablero
     /**
      * Cambia los mensajes que aparecen debajo del Tablero
      * @return Estado Retorna el estado del juego, sea terminado, sin comenzar o el turno Correspondiente
      */
-    //Sirve para cambiar los mensajes que vez en el tablero
     private String getPlayerMsg() {
         
         if (hasWon) {
@@ -159,7 +157,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
      */
         private void checkMove(int desRow, int desColumn) {
 
-        boolean legalMove = false, enroque = false;
+        boolean legalMove = false;
 
         if (cellMatrix.getPlayerCell(desRow,desColumn) == currentPlayer) {
             strStatusMsg = "No puedes mover";
@@ -179,10 +177,8 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 break;
                 case 4: legalMove = queenObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix());
                 break;
-                case 5:
-                    legalMove = kingObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix());
-                    enroque = false ;
-                    break;
+                case 5: legalMove = kingObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix());
+                break;
 
             }
 
@@ -211,14 +207,8 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 case 4: newDesRow = queenObject.getDesRow();
                 newDesColumn = queenObject.getDesColumn();
                 break;
-                case 5:
-                    if (enroque)
-                    {
-
-                    }
-                    newDesRow = kingObject.getDesRow();
-                    newDesColumn = kingObject.getDesColumn();
-
+                case 5: newDesRow = kingObject.getDesRow();
+                newDesColumn = kingObject.getDesColumn();
                 break;
 
             }
@@ -454,9 +444,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                     updatePaintInstructions(desRow, desColumn);
                     repaint();
                     
-                }
-
-                else {
+                } else {
                     refreshCounter++;
                 }
                 
