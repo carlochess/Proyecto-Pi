@@ -68,7 +68,8 @@ public class objChessPieces {
                         
                     }
                     
-                } else {
+                } 
+                else {
                     
                     for (int newRow = (startRow + 1); newRow < desRow; newRow++) {
                         

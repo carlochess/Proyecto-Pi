@@ -104,14 +104,18 @@ public class objChessBoard extends Canvas {
     }
     
 	/**
-	 * No se que hace
-	 *
+	 * Traduce las coordenadas paramétricas a coordenadas algebraicas
+	 * @param Coordenada
+         * @return boolean Si la operación fue exitosa la coordenada en [0,8] , de lo contrario -1
 	*/
-    protected int findWhichTileSelected(int coor) {
+    protected int findWhichTileSelected(int coor) 
+    {
         
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++)
+        {
             
-            if ((coor >= (50 + (i * 50))) && (coor <= (100 + (i * 50)))) {
+            if ((coor >= (50 + (i * 50))) && (coor <= (100 + (i * 50))))
+            {
                 return i;
             }
             
