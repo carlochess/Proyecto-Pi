@@ -11,9 +11,9 @@ public class chessGUI implements ActionListener, KeyListener, WindowFocusListene
     private JButton cmdNewGame, cmdSetNames;
     private JTextField txtPlayerOne, txtPlayerTwo;
     private JLabel lblPlayerOne, lblPlayerTwo;
-    private String[] strRedPieces = {"redPawn.gif","redRock.gif","redKnight.gif","redBishop.gif","redQueen.gif","redKing.gif"};
-    private String[] strBluePieces = {"bluePawn.gif","blueRock.gif","blueKnight.gif","blueBishop.gif","blueQueen.gif","blueKing.gif"};
-    private Color clrBlue = new Color(75,141,221);
+    private String[] strRedPieces = {"bluePawn.png","blueRock.png","blueKnight.png","blueBishop.png","blueQueen.png","blueKing.png"};
+    private String[] strBluePieces = {"redPawn.png","redRock.png","redKnight.png","redBishop.png","redQueen.png","redKing.png"};
+    private Color clrBlue = new Color(100, 50, 0);//75,141,221
     private MediaTracker mt;
 
     // Constructor de la clase
@@ -38,8 +38,8 @@ public class chessGUI implements ActionListener, KeyListener, WindowFocusListene
         cmdNewGame.addActionListener(this);
         cmdSetNames.addActionListener(this);
         
-        txtPlayerOne = new JTextField("Carlos", 10);
-        txtPlayerTwo = new JTextField("Oponente",10);
+        txtPlayerOne = new JTextField("Jugador 1", 10);
+        txtPlayerTwo = new JTextField("Jugador 2",10);
         
         txtPlayerOne.addKeyListener(this);
         txtPlayerTwo.addKeyListener(this);
@@ -106,8 +106,8 @@ public class chessGUI implements ActionListener, KeyListener, WindowFocusListene
         panNameButton.setBackground(clrBlue);
         panNewGame.setBackground(clrBlue);
         
-        lblPlayerOne.setBackground(new Color(236,17,17));
-        lblPlayerTwo.setBackground(new Color(17,27,237));
+        lblPlayerOne.setBackground(new Color(100, 50, 0)); //  236,17,17
+        lblPlayerTwo.setBackground(new Color(100, 50, 0));//17,27,237
         
         cmdNewGame.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         

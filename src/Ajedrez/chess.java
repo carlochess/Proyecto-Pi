@@ -34,7 +34,7 @@ public class chess extends JFrame {
 		 catch (Exception e)
 	 {
          }
-        JFrame frame = new JFrame("Juego de ajedrez - http://hwongu.blogspot.com");
+        JFrame frame = new JFrame("Ajedrez ");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 
         // Define y declara un objeto tipo chessGUI. [Ver chessGUI]
