@@ -10,7 +10,8 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
     private final int refreshRate = 5;
     
     private Image[][] imgPlayer = new Image[2][6];
-    private String[] strPlayerName = {"Henry Wong", "TU --> MI CONTRICANTE"};
+    private String[] strPlayerName = {"Jugador 1", "Jugador 2"};
+    private boolean[] hasidomovida = {false, false, false, false};
     private String strStatusMsg = "";
     private objCellMatrix cellMatrix = new objCellMatrix();
     private int currentPlayer = 1, startRow = 0, startColumn = 0, pieceBeingDragged = 0;
@@ -32,19 +33,17 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         this.addMouseMotionListener(this);
         
     }
-
-    //Siver para cambiar los mensajes que vez en el tablero
+    //Sirve para cambiar los mensajes que vez en el tablero
     /**
      * Cambia los mensajes que aparecen debajo del Tablero
      * @return Estado Retorna el estado del juego, sea terminado, sin comenzar o el turno Correspondiente
      */
-    //Sirve para cambiar los mensajes que vez en el tablero
     private String getPlayerMsg() {
         
         if (hasWon) {
             return "Felicitaciones " + strPlayerName[currentPlayer - 1] + ", tu eres el ganadaror!";
         } else if (firstTime) {
-            return "" + strPlayerName[0] + " tu eres los rojos, " + strPlayerName[1] + " tu eres los blancos. Presiona nuevo juego para empezar";
+            return "" + strPlayerName[0] + " tu juegas con las piezas blancas, " + strPlayerName[1] + " tu juegas con las piezas negras. Presiona nuevo juego para empezar";
         } else {
             return "" + strPlayerName[currentPlayer - 1] + " mueve";
         }
@@ -151,6 +150,55 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         
     }
     
+    // Función que verifica si las torres ha sido movidas, capturadas o, en su
+    // defecto, se encuentran en su posición inicial
+    
+    /* 
+     * Función que verifica si las torres ha sido movidas, capturadas o, en su
+     * defecto, se encuentran en su posición inicial
+     */
+    private void updateRook()
+    {
+        // Verifica si la primera torre (Esquina sup. izquierda) esta y es del jugador actual
+        if (cellMatrix.getPieceCell(0, 0)!=1&&cellMatrix.getPlayerCell(0, 0)!=currentPlayer)
+                hasidomovida[0]= true;
+        // Verifica si la segunda torre (Esquina sup. derecha) esta y es del jugador actual
+        if (cellMatrix.getPieceCell(0, 7)!=1&&cellMatrix.getPlayerCell(0, 7)!=currentPlayer)
+                hasidomovida[1]= true;
+        // Verifica si la tercera torre (Esquina inferior izquierda) esta y es del jugador actual
+        if (cellMatrix.getPieceCell(7, 0)!=1&&cellMatrix.getPlayerCell(7, 0)!=currentPlayer)
+                hasidomovida[2]= true;
+        // Verifica si la cuarta torre (Esquina inferior derecha) esta y es del jugador actual
+        if (cellMatrix.getPieceCell(7, 7)!=1&&cellMatrix.getPlayerCell(7, 7)!=currentPlayer)
+                hasidomovida[3]= true;
+    }
+    /*
+     * Retorna la posición del arreglo de la torre más cercana dadas las coordenadas finales del mov. del rey.
+     * return [0,3]
+     */
+    private int torreMasProxima(int desRow, int desColumn)
+    {
+        //(desRow == 0 ) ? ((desColumn==0) ? return 0 : return 1) : ((desColumn==0 )? return 2 : return 3);
+        if (desRow == 0 )
+        { // Dom {0,1}
+            if (desColumn<=4)
+            {
+                return 0;
+            }
+            return 1;
+        }
+        else // (destRow == 7 )
+        {// Dom {2,3}
+            if (desColumn<=4)
+            {
+                return 2;
+            }
+            return 3;
+        }
+        
+    }
+    
+    
     //Valida los movimientos
     /**
      * Valida el Movimiento de la pieza Seleccionada
@@ -159,8 +207,11 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
      */
         private void checkMove(int desRow, int desColumn) {
 
-        boolean legalMove = false, enroque = false;
-
+        boolean legalMove = false;
+        int enroque = 0;
+        
+        updateRook();
+        
         if (cellMatrix.getPlayerCell(desRow,desColumn) == currentPlayer) {
             strStatusMsg = "No puedes mover";
         }
@@ -180,13 +231,17 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 case 4: legalMove = queenObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix());
                 break;
                 case 5:
-                    legalMove = kingObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix());
-                    enroque = false ;
+                    // statusTorre = false si es légitimo el movimiento
+                    boolean statusTorre = !hasidomovida[torreMasProxima(desRow, desColumn)];
+                    // Agregue como parametro statusTorre
+                    legalMove = kingObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix(), currentPlayer, statusTorre);
+                    enroque = kingObject.getEnroque();
+                    kingObject.setEnroque(0);
                     break;
-
             }
 
         }
+        
         // Ha sido una movida adecuada?
         if (legalMove) {
 
@@ -212,12 +267,24 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 newDesColumn = queenObject.getDesColumn();
                 break;
                 case 5:
-                    if (enroque)
-                    {
-
-                    }
                     newDesRow = kingObject.getDesRow();
                     newDesColumn = kingObject.getDesColumn();
+                    if (enroque!=0)
+                    {
+                        if(enroque==1){
+                        cellMatrix.setPieceCell(newDesRow, newDesColumn-1, 1);
+                        cellMatrix.setPlayerCell(newDesRow, newDesColumn-1, currentPlayer);
+                        cellMatrix.setPieceCell(newDesRow, newDesColumn+1, 6);
+                        cellMatrix.setPlayerCell(newDesRow, newDesColumn+1, 0);
+                        }
+                        else if (enroque==-1){
+                        cellMatrix.setPieceCell(newDesRow, newDesColumn+1, 1);
+                        cellMatrix.setPlayerCell(newDesRow, newDesColumn+1, currentPlayer);
+                        cellMatrix.setPieceCell(newDesRow, newDesColumn-2, 6);
+                        cellMatrix.setPlayerCell(newDesRow, newDesColumn-2, 0);
+                        }
+                    }
+                    
 
                 break;
 
