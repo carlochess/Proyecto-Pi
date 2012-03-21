@@ -198,7 +198,6 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         
     }
     
-    
     //Valida los movimientos
     /**
      * Valida el Movimiento de la pieza Seleccionada
@@ -299,6 +298,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
             {
                 promocion ( newDesRow, newDesColumn);
             }
+            // 
             else
             {
                 cellMatrix.setPieceCell(newDesRow, newDesColumn, pieceBeingDragged);
@@ -322,7 +322,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 {
                     currentPlayer = 1;
                 }
-
+        
                 strStatusMsg = getPlayerMsg();
             }
 
@@ -351,7 +351,12 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
             unsucessfullDrag(desRow, desColumn);
 
         }
-
+        // Eliminar en cuanto pueda:
+        // checkCheck
+        if (checkCheck(currentPlayer)) {
+            System.out.println("Estas en Jaque");
+        }
+        // Eliminar en cuanto pueda:
     }
 
         /**
@@ -409,7 +414,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 } else {
                     currentPlayer = 1;
                 }
-
+        
                 strStatusMsg = getPlayerMsg();
 
             }
@@ -540,4 +545,58 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         repaint();
     }
     
+    // Esta función recorre todo el tablero de las fichas, seleccionando
+    // Aquellas que pertenezcan al jugandor contrario
+    public boolean checkCheck(int currentPlayer)
+    {
+        int xKing=0, yKing=0;
+        // Primero encontraremos a nuestro Rey
+        for (int i=0; i<8; i++)
+        {
+            for (int j=0; j <8; j++)
+            {
+             if(cellMatrix.getPieceCell(i,j) == 5 && cellMatrix.getPlayerCell(i,j) == currentPlayer)
+             {
+                 xKing=i;
+                 yKing=j;
+                 break;
+             }
+            }
+        }
+        // Vamos encontrando cada ficha y determinaremos si estan en alguna posición
+        // Ataca al rey del currentPlayer
+        for (int i=0; i<8 ; i++)
+        {
+            for (int j=0; j<8 ; j++)
+            {
+                if(cellMatrix.getPieceCell(i,j) != 6 && cellMatrix.getPlayerCell(i,j) != currentPlayer)
+                {
+                    if (checkPieceCheck(i,j,xKing, yKing, currentPlayer))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean checkPieceCheck(int i, int j,int xKing,int yKing,int currentPlayer)
+    {
+        boolean jaque=false;
+        switch (cellMatrix.getPieceCell(i,j)) 
+        {
+                case 0: jaque = pawnObject.legalMove(i, j, xKing, yKing, cellMatrix.getPlayerMatrix(), currentPlayer);
+                    break;
+                case 1: jaque = rockObject.legalMove(i, j, xKing, yKing, cellMatrix.getPlayerMatrix());
+                    break;
+                case 2: jaque = knightObject.legalMove(i, j, xKing, yKing, cellMatrix.getPlayerMatrix());
+                    break;
+                case 3: jaque = bishopObject.legalMove(i, j, xKing, yKing, cellMatrix.getPlayerMatrix());
+                    break;
+                case 4: jaque = queenObject.legalMove(i, j, xKing, yKing, cellMatrix.getPlayerMatrix());
+                    break;
+                default:
+                    break;
+        }
+        return jaque;
+    }
 }
