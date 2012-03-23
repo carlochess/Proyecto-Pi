@@ -8,14 +8,16 @@ package Ajedrez;
 */
 public class objKing extends objChessPieces {
     
-	/**
+    
+
+    	/**
 	* Constructor de la clase Rey
 	*/
     
      // -1 enroque largo, 0 enroque , 1 enroque corto
     int enroque=0;
-    private static boolean haSidoMovidoBlancas=false, haSidoMovidoNegras=false;
-    private boolean haSidoMovido;
+ 
+    
     public void objKing() {
     }
     public void setEnroque(int enroque)
@@ -39,7 +41,7 @@ public class objKing extends objChessPieces {
 	 * @param playerMatrix La matriz del jugador 
 	 * @return Si es posible o no mover esta ficha
  	*/
-    public boolean legalMove(int startRow, int startColumn, int desRow, int desColumn, int[][] playerMatrix, int currentPlayer, boolean statusTorre) 
+    public boolean legalMove(int startRow, int startColumn, int desRow, int desColumn, int[][] playerMatrix, int currentPlayer, boolean statusTorre, boolean hasidomovida) 
     {
         
         finalDesRow = desRow;
@@ -52,43 +54,42 @@ public class objKing extends objChessPieces {
         if (desRow == (startRow + 1) && desColumn == startColumn) // S |
                                                                   //   v
         {
-            haSidoMovido = true;
+            
             movimientoLegal= true;
         }
         else if (desRow == (startRow + 1) && desColumn == (startColumn - 1)) //SW   /
             //                                                                       x
         {
-            haSidoMovido = true;
+            
             movimientoLegal= true;
         }
 
         else if (desRow == startRow && desColumn == startColumn - 1) //W  <---
         {
-            haSidoMovido = true;
+            
             movimientoLegal= true;
         }
 
         else if (desRow == (startRow - 1) && desColumn == (startColumn - 1)) //NW  x
             //                                                                      \
         {
-            haSidoMovido = true;
+            
             movimientoLegal= true;
         } 
         else if (desRow == (startRow - 1) && desColumn == startColumn) //N ^
             //                                                               |
         {
-            haSidoMovido = true;
+           
             movimientoLegal= true;
         }
         else if (desRow == (startRow - 1) && desColumn == (startColumn + 1)) //NE  x
             //                                                                      /
         {
-            haSidoMovido = true;
             movimientoLegal= true;
         }
         else if (desRow == startRow && desColumn == (startColumn + 1)) //E  -->
         {
-            haSidoMovido = true;
+            
             movimientoLegal= true;
         }
         
@@ -96,7 +97,7 @@ public class objKing extends objChessPieces {
         else if (desRow == (startRow + 1) && desColumn == (startColumn + 1)) //SE  \
             //                                                                      x
         {
-            haSidoMovido = true;
+            
             movimientoLegal= true;
         }
         
@@ -104,58 +105,31 @@ public class objKing extends objChessPieces {
        //Movimientos para Enroque
         
         // Se mueve dos casillas a la derecha 
-        else if(currentPlayer==1 && statusTorre)
+        else if(statusTorre)
         {
         
             if (desRow == startRow && desColumn == (startColumn + 2) )
                 {
-                    if (this.axisMove(startRow, startColumn, desRow, desColumn, playerMatrix, true)&&!haSidoMovidoBlancas)
+                    if (this.axisMove(startRow, startColumn, desRow, desColumn, playerMatrix, true)&&!hasidomovida)
                     {
                         enroque = 1;
-                        haSidoMovidoBlancas = true;
+                        
                         movimientoLegal= true;
                     }
                 }
                 //Se mueve dos casillas a la izquierda
                 else if (desRow == startRow && desColumn == (startColumn - 2))
                 {
-                    if (this.axisMove(startRow, startColumn, desRow, desColumn, playerMatrix, true)&&currentPlayer==1&&!haSidoMovidoBlancas)
+                    if (this.axisMove(startRow, startColumn, desRow, desColumn, playerMatrix, true)&&!hasidomovida)
                     {
                         enroque = -1;
-                        haSidoMovidoBlancas = true;
+                        
                         movimientoLegal= true;
                     }
                 }
         }
         
-        
-        else if(currentPlayer==2 && statusTorre)
-        {
-        // Enroque Negro
-            if(!haSidoMovidoNegras && currentPlayer==2){
-
-                // Se mueve dos casillas a la derecha 
-                if (desRow == startRow && desColumn == (startColumn + 2))
-                {
-                    if (this.axisMove(startRow, startColumn, desRow, desColumn, playerMatrix, true)&&!haSidoMovidoNegras)
-                    {
-                        enroque = 1;
-                        haSidoMovidoNegras = true;
-                        movimientoLegal= true;
-                    }
-                }
-                //Se mueve dos casillas a la izquierda
-                    else if (desRow == startRow && desColumn == (startColumn - 2))
-                    {
-                        if (this.axisMove(startRow, startColumn, desRow, desColumn, playerMatrix, true)&&currentPlayer==2&&!haSidoMovidoNegras)
-                        {
-                            enroque = -1;
-                            haSidoMovidoNegras = true;
-                            movimientoLegal= true;
-                        }
-                    }
-            }
-        }
+ 
         
         else
         {
@@ -165,14 +139,7 @@ public class objKing extends objChessPieces {
             movimientoLegal= false;
         }
         
-        if (movimientoLegal)
-        {
-            if(currentPlayer==1)
-                haSidoMovidoBlancas = true;
-            
-            if (currentPlayer==2)
-                haSidoMovidoNegras = true;
-        }
+
         
         return movimientoLegal;
         }

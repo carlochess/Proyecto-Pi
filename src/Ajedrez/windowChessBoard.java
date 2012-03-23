@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JOptionPane;
 import javax.swing.JDialog;
+import java.util.*;
+
 
 public class windowChessBoard extends objChessBoard implements MouseListener, MouseMotionListener {
     
@@ -12,12 +14,13 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
     private Image[][] imgPlayer = new Image[2][6];
     private String[] strPlayerName = {"Jugador 1", "Jugador 2"};
     private boolean[] hasidomovida = {false, false, false, false};
+    private boolean[] reyHaSidoMovido={false, false};
     private String strStatusMsg = "";
     private objCellMatrix cellMatrix = new objCellMatrix();
     private int currentPlayer = 1, startRow = 0, startColumn = 0, pieceBeingDragged = 0;
     private int startingX = 0, startingY = 0, currentX = 0, currentY = 0, refreshCounter = 0;
     private boolean firstTime = true, hasWon = false, isDragging = false;
-    
+    ArrayList<String> atacantes = new ArrayList<String>();
     private objPawn pawnObject = new objPawn();
     private objRock rockObject = new objRock();
     private objKnight knightObject = new objKnight();
@@ -54,14 +57,23 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
     /**
      * Inicia de Nuevo el Juego
      */
-    private void resetBoard() {
+    private void resetBoard() 
+    {
         
         hasWon = false;
         currentPlayer = 1;
         strStatusMsg = getPlayerMsg();
         cellMatrix.resetMatrix();
         repaint();
+        for(int i=0; i<hasidomovida.length ; i++)
+        {
+            hasidomovida[i]=false;
+        }
         
+        for(int i=0; i<reyHaSidoMovido.length ; i++)
+        {
+            reyHaSidoMovido[i]=false;
+        }
     }
 
     /**
@@ -156,6 +168,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
     /* 
      * Función que verifica si las torres ha sido movidas, capturadas o, en su
      * defecto, se encuentran en su posición inicial
+     * A Milton le Gusta Diana!!!! Lero Lero Lero!!!
      */
     private void updateRook()
     {
@@ -217,7 +230,8 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         else
         {
 
-            switch (pieceBeingDragged) {
+            switch (pieceBeingDragged) 
+            {
                 //Esta es la parte mas importante aca es donde se ve si realmente las piezas se mueven en la direccion correcta
                 case 0: legalMove = pawnObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix(), currentPlayer);
                 break;
@@ -233,8 +247,15 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                     // statusTorre = false si es légitimo el movimiento
                     boolean statusTorre = !hasidomovida[torreMasProxima(desRow, desColumn)];
                     // Agregue como parametro statusTorre
-                    legalMove = kingObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix(), currentPlayer, statusTorre);
-                    enroque = kingObject.getEnroque();
+                    legalMove = kingObject.legalMove(startRow,
+                                                     startColumn,
+                                                     desRow,
+                                                     desColumn,
+                                                     cellMatrix.getPlayerMatrix(),
+                                                     currentPlayer,
+                                                     statusTorre, reyHaSidoMovido[currentPlayer-1]);
+                    
+                    enroque = kingObject.getEnroque();                    
                     kingObject.setEnroque(0);
                     break;
             }
@@ -248,7 +269,8 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
             int newDesColumn = 0;
 
             // pieceBeingDragged
-            switch (pieceBeingDragged) {
+            switch (pieceBeingDragged) 
+            {
 
                 case 0: newDesRow = pawnObject.getDesRow();
                 newDesColumn = pawnObject.getDesColumn();
@@ -268,6 +290,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 case 5:
                     newDesRow = kingObject.getDesRow();
                     newDesColumn = kingObject.getDesColumn();
+                    reyHaSidoMovido[currentPlayer-1]=true;
                     if (enroque!=0)
                     {
                         if(enroque==1){
@@ -331,7 +354,8 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         {
            // Si por el conmtrario, la ficha ha sido movida de forma indebida, aparecerá
         // Un mensaje de error especifico para esa ficha
-            switch (pieceBeingDragged) {
+            switch (pieceBeingDragged) 
+            {
 
                 case 0: strStatusMsg = pawnObject.getErrorMsg();
                 break;
@@ -351,9 +375,9 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
             unsucessfullDrag(desRow, desColumn);
 
         }
-        // Eliminar en cuanto pueda:
-        // checkCheck
-        if (checkCheck(currentPlayer)) {
+        // Hay Jaque para el otro jugador despues de currentPlayer?
+        if (checkCheck(currentPlayer))
+        {
             System.out.println("Estas en Jaque");
         }
         // Eliminar en cuanto pueda:
@@ -544,9 +568,163 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
     public void gotFocus() {
         repaint();
     }
+    //********************************************    
+    /*
+    * Esta función
+    * @param 
+    * @return 
+    */
+                
+	public boolean ismate(int xKing,int yKing, int  currentPlayer)
+	{
+            // Comentario, Puede_serCapturada es el mismo método que puede_serInterceptada, ambos revisan
+            // Si cierta casilla entre el atacante y el atacado puede ser atacada por una tercera, en defensa
+            // Del atacado. Reducir de inmediato!.
+            return !(puede_escapar(xKing,yKing, currentPlayer)|| puede_serCapturada(currentPlayer) ||puede_serInterceptado(xKing,yKing));
+	}
+        
+        public boolean puede_serInterceptado(int xKing,int yKing)
+        {
+            int xAttack = (int)(atacantes.get(0)).charAt(0);
+            int yAttack = (int)(atacantes.get(0)).charAt(1);
+            ArrayList<string> casillas = new ArrayList<string>;
+            //*-------*      *
+            //  *            |          *
+            //      -        |       -
+            //          *    |    *  
+            //               *
+			while( xKing != xAttack || yKing != yAttack)
+			{
+				// Agregamos las coordenadas
+				casillas.add(""+xKing+""+yKing);
+			   	if (xKing != xAttack)
+			   	{
+			   		(xKing < xAttack) ? ++xKing : --xKing;
+			   	}
+			   	if (y != yAttack)
+			   	{
+			       (yKing < yAttack) ? ++yKing : --yKing;
+			   	}
+	    	}
+            // Asumiendo que existe un arreglo con todas las posibles casillas para ser interceptadas...
+            // Asumiendo que todas las casillas entre el atacante y el rey son vacias
+            // Verificado que el atacante no sea {Peon, Rey(?) o caballo}
+            // Entonces...
+            
+            int tipoPieza = cellMatrix.getPieceCell(xAttack,yAttack);
+            // Si no es un 
+            //0 peon, 1 torre, 2 caballo, 3 alfil, 4 reina, 5 rey, 6 empty
+            if (tipoPieza != 0 && tipoPieza != 2 && tipoPieza != 5 && tipoPieza != 6)
+            {
+                // Similar a "PuedeEscapar?"
+                boolean resultadoparcial = false;
+                for(int k=0;k<casillas.size();k++)
+                {
+                    String temp=casillas.get(k);
+                    //para cada pieza del enemigo evaluamos si ataca la casilla adyacente al rey
+                    for (int i=0; i<8 ; i++)
+                    {
+                        for (int j=0; j<8 ; j++)
+                        {
+                            if(cellMatrix.getPieceCell(i,j) != 6 && cellMatrix.getPlayerCell(i,j) != currentPlayer)
+                            {   
+                                resultadoparcial=resultadoparcial||(checkPieceCheck(i,j,(int)temp.charAt(0), (int)temp.charAt(1), currentPlayer));
+                            }
+                        }
+                    }
+                    if(!resultadoparcial)
+                       return true;
+                    }
+            }
+                
+            return false;
+        }
+        
+        // Verifica si la ficha atacante puede ser capturada.
+        public boolean puede_serCapturada(int currentPlayer)
+        {
+            // Si los atacantes son más de dos, es Imposible capturar a ambos en una sola jugada...
+            // Nota: Cualquier pieza, excepto el rey, puede ser potencialmente capturada.
+            if(atacantes.size()==1)
+            {
+                int xAttack = (int)(atacantes.get(0)).charAt(0);
+                int yAttack = (int)(atacantes.get(0)).charAt(1);
+                for (int i=0; i<8 ; i++)
+                {
+                    for (int j=0; j<8 ; j++)
+                    {
+                        // Aqui cambia un poco, Si mis fichas pueden estan en capacidad de atacar a la pieza que amenaza al rey.
+                        if(cellMatrix.getPieceCell(i,j) != 6 && cellMatrix.getPlayerCell(i,j) == currentPlayer)
+                        {   
+                            // i,j =atacante ; 
+                            if(checkPieceCheck(i,j,xAttack,yAttack, currentPlayer))
+                                return true;
+                        }
+                    }
+                }
+                
+            }
+            return false;
+        }
+        
+        public boolean puede_escapar(int xKing, int yKing, int currentPlayer)
+        {
+            boolean resultadoparcial=false;
+            
+            
+            ArrayList<String> casillasPotenciales = new ArrayList<String>();
+           //Hallamos las casillas Adyacentes
+        for(int i=yKing-1; i<=yKing+1; i++)
+        {
+                if(i >= 0 && i <= 7)
+                {
+                        for(int y=xKing-1; y<=xKing+1; y++)
+                        {
+                                if (y >=0 && y <= 7)
+                                {
+                                       if(cellMatrix.getPlayerCell(i, y)!=currentPlayer)
+                                       {
+                                           if(i!=yKing&&y!=xKing)
+                                           casillasPotenciales.add(""+i+y);
+                                       }
+                                }
+                        }
+                }
+        } 
+        
+        //Evaluamos el Jaque en cada casilla adyacente
+        for(int k=0;k<casillasPotenciales.size();k++)
+       {
+        String temp=casillasPotenciales.get(k);
+        
+        //para cada pieza del enemigo evaluamos si ataca la casilla adyacente al rey
+            for (int i=0; i<8 ; i++)
+            {
+                for (int j=0; j<8 ; j++)
+                {
+                    if(cellMatrix.getPieceCell(i,j) != 6 && cellMatrix.getPlayerCell(i,j) != currentPlayer)
+                    {   
+                        resultadoparcial=resultadoparcial||(checkPieceCheck(i,j,(int)temp.charAt(0), (int)temp.charAt(1), currentPlayer));
+                            
+                    }
+                }
+            }
+            if(!resultadoparcial)
+               return true;
+            
+               
+            }
+        return false;
+        
+        }
     
-    // Esta función recorre todo el tablero de las fichas, seleccionando
-    // Aquellas que pertenezcan al jugandor contrario
+    //********************************************
+    /*
+    * Esta función recorre todo el tablero de las fichas, seleccionando
+    * Aquellas que pertenezcan al jugandor contrario
+    * 	@param currentPlayer Jugador actual
+    *	@return boolean Si el rey esta en Jaque;
+    */
     public boolean checkCheck(int currentPlayer)
     {
         int xKing=0, yKing=0;
@@ -555,6 +733,7 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         {
             for (int j=0; j <8; j++)
             {
+            // 5 = Rey; Si el número 5 se encuentra en alguna casilla de la matriz y pertenece al jugador seleccionado
              if(cellMatrix.getPieceCell(i,j) == 5 && cellMatrix.getPlayerCell(i,j) == currentPlayer)
              {
                  xKing=i;
@@ -563,26 +742,40 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
              }
             }
         }
+        boolean hayJaque=false;
         // Vamos encontrando cada ficha y determinaremos si estan en alguna posición
         // Ataca al rey del currentPlayer
         for (int i=0; i<8 ; i++)
         {
             for (int j=0; j<8 ; j++)
             {
+            	// Si la casilla no es vacia y pertenece al jugador al jugador contrario entonces...
                 if(cellMatrix.getPieceCell(i,j) != 6 && cellMatrix.getPlayerCell(i,j) != currentPlayer)
                 {
+                	// Si la ficha antes seleccionada esta en capacidad de amenazar el rey entonces...
                     if (checkPieceCheck(i,j,xKing, yKing, currentPlayer))
-                        return true;
+                    {
+                    	// Almacenaremos las coordenadas en una pila.
+                        atacantes.add(i+""+j);
+                        hayJaque = true;
+                    }
                 }
             }
         }
-        return false;
+        return hayJaque;
     }
-    
+    /*
+    * 	@param i coordenada en x de la ficha atacante
+    * 	@param j coordenada en y de la ficha atacante
+    * 	@param xKing coordenada en x de la ficha posiblemente atacada
+    * 	@param yKing coordenada en y de la ficha posiblemente atacada
+    * 	@param currentPlayer jugador posiblemente atacado
+    *	@return boolean Si la pieza esta siendo atacada o no;
+    */
     public boolean checkPieceCheck(int i, int j,int xKing,int yKing,int currentPlayer)
     {
         boolean jaque=false;
-        switch (cellMatrix.getPieceCell(i,j)) 
+        switch (cellMatrix.getPieceCell(i,j))
         {
                 case 0: jaque = pawnObject.legalMove(i, j, xKing, yKing, cellMatrix.getPlayerMatrix(), currentPlayer);
                     break;
@@ -597,6 +790,9 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
                 default:
                     break;
         }
+       /* if (jaque){
+        if(ismate(xKing, yKing, currentPlayer))
+                System.out.println("mate");}*/
         return jaque;
     }
 }

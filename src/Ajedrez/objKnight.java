@@ -5,6 +5,7 @@ package Ajedrez;
 */
 public class objKnight extends objChessPieces {
     
+    
 	/**
 	 * Constructor de la clase Caballo
 	*/
