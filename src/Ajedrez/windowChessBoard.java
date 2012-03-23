@@ -587,24 +587,30 @@ public class windowChessBoard extends objChessBoard implements MouseListener, Mo
         {
             int xAttack = (int)(atacantes.get(0)).charAt(0);
             int yAttack = (int)(atacantes.get(0)).charAt(1);
-            ArrayList<string> casillas = new ArrayList<string>;
+            ArrayList<String> casillas = new ArrayList<String>();
             //*-------*      *
             //  *            |          *
             //      -        |       -
             //          *    |    *  
             //               *
-			while( xKing != xAttack || yKing != yAttack)
-			{
-				// Agregamos las coordenadas
-				casillas.add(""+xKing+""+yKing);
-			   	if (xKing != xAttack)
-			   	{
-			   		(xKing < xAttack) ? ++xKing : --xKing;
-			   	}
-			   	if (y != yAttack)
-			   	{
-			       (yKing < yAttack) ? ++yKing : --yKing;
-			   	}
+            while( xKing != xAttack || yKing != yAttack)
+            {
+                    // Agregamos las coordenadas
+                    casillas.add(""+xKing+""+yKing);
+                    if (xKing != xAttack)
+                    {
+                        if (xKing < xAttack)
+                            ++xKing;
+                        else
+                            --xKing;
+                    }
+                    if (yKing != yAttack)
+                    {
+                        if (yKing < yAttack) 
+                            ++yKing;
+                        else
+                            --yKing;
+                    }
 	    	}
             // Asumiendo que existe un arreglo con todas las posibles casillas para ser interceptadas...
             // Asumiendo que todas las casillas entre el atacante y el rey son vacias
