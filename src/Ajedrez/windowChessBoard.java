@@ -8,65 +8,61 @@ import java.util.*;
 
 public class windowChessBoard extends objChessBoard //implements MouseListener, MouseMotionListener
 {
-
-    private final int refreshRate = 5;
-    private Image[][] imgPlayer = new Image[2][6];
+    //-----------------------------------
+    // Atributos
+    //-----------------------------------
+    
+    private Image[][] imgPlayer;
     private int xKing, yKing;
     private boolean statusTorre;
-    private boolean[] hasidomovida =
-    {
-        false, false, false, false
-    };
-    private boolean[] reyHaSidoMovido =
-    {
-        false, false
-    };
-    public objCellMatrix cellMatrix;
-    private int currentPlayer = 1, startRow = 0, startColumn = 0, pieceBeingDragged = 0;
-
-    public int getCurrentPlayer()
-    {
-        return currentPlayer;
-    }
-
-    public void setStartColumn(int startColumn)
-    {
-        this.startColumn = startColumn;
-    }
-
-    public void setStartRow(int startRow)
-    {
-        this.startRow = startRow;
-    }
-    private int currentX = 0, currentY = 0;
-    private boolean firstTime = true, hasWon = false, isDragging = false;
-    ArrayList<String> atacantes;
-    private objPawn pawnObject = new objPawn();
-    private objRock rockObject = new objRock();
-    private objKnight knightObject = new objKnight();
-    private objBishop bishopObject = new objBishop();
-    private objQueen queenObject = new objQueen();
-    private objKing kingObject = new objKing();
-    private boolean salidapeon = false;
-    private int elpeonsalede = -1;
-    administradorJugadas admin;
-    Jaque adminJaque;
+    private boolean[] hasidomovida;
+    private boolean[] reyHaSidoMovido;
+    private int currentPlayer,startColumn,startRow;
+    private ArrayList<String> atacantes;
+    private objPawn pawnObject;
+    private objRock rockObject;
+    private objKnight knightObject;
+    private objBishop bishopObject;
+    private objQueen queenObject;
+    private objKing kingObject;
+    private boolean salidapeon,hasWon;
+    private int elpeonsalede;
+    private administradorJugadas admin;
+    private Jaque adminJaque;
     private JaqueMate verificarJaquemate;
-    private boolean[] Jaque = new boolean[]
-    {
-        false, false, false
-    };
+    public objCellMatrix cellMatrix;
 
+    //-----------------------------------
+    // Constructor
+    //-----------------------------------
     /**
      * Constructor Incluye los Listeners al JPanel
      */
     public windowChessBoard()
     {
-        atacantes = new ArrayList<String>();
+        pawnObject = new objPawn();
+        rockObject = new objRock();
+        knightObject = new objKnight();
+        bishopObject = new objBishop();
+        queenObject = new objQueen();
+        kingObject = new objKing();
         cellMatrix = new objCellMatrix();
         admin = new administradorJugadas();
         verificarJaquemate = new JaqueMate(cellMatrix, currentPlayer);
         adminJaque = new Jaque(cellMatrix);
+        
+        elpeonsalede = -1;
+        currentPlayer = 1;
+        salidapeon = false;
+        hasWon = false;
+        startColumn=0;
+        startRow=0;
+        
+        atacantes = new ArrayList<String>();
+        
+        imgPlayer = new Image[2][6];
+        hasidomovida = new boolean[]{false, false, false, false};
+        reyHaSidoMovido = new boolean []{false, false};
     }
 
     //Comiezan el juego de nuevo
@@ -185,57 +181,9 @@ public class windowChessBoard extends objChessBoard //implements MouseListener, 
 
             switch (pieceBeingDragged)
             {
-                //Esta es la parte mas importante aca es donde se ve si realmente las piezas se mueven en la direccion correcta
                 case 0:
                     legalMove = pawnObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix(), currentPlayer, salidapeon, elpeonsalede);
-                    if (legalMove && elpeonsalede == desColumn)
-                    {
-                        if (startRow + 1 == desRow && desRow == 2)
-                        {
-                            if (currentPlayer == 1)
-                            {
-                                cellMatrix.setPieceCell(desRow - 1, desColumn, 6);
-                                cellMatrix.setPlayerCell(desRow - 1, desColumn, 0);
-                            }
-                            else if (desRow == 5)
-                            {
-                                if (currentPlayer == 2)
-                                {
-                                    cellMatrix.setPieceCell(desRow - 1, desColumn, 6);
-                                    cellMatrix.setPlayerCell(desRow - 1, desColumn, 0);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (startRow - 1 == desRow && desRow == 2)
-                            {
-                                if (currentPlayer == 1)
-                                {
-                                    cellMatrix.setPieceCell(desRow + 1, desColumn, 6);
-                                    cellMatrix.setPlayerCell(desRow + 1, desColumn, 0);
-                                }
-                                else if (desRow == 5)
-                                {
-                                    if (currentPlayer == 2)
-                                    {
-                                        cellMatrix.setPieceCell(desRow + 1, desColumn, 6);
-                                        cellMatrix.setPlayerCell(desRow + 1, desColumn, 0);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (legalMove && (startRow + 2 == desRow || startRow - 2 == desRow))
-                    {
-                        salidapeon = true;
-                        elpeonsalede = startColumn;
-                    }
-                    else
-                    {
-                        salidapeon = false;
-                        elpeonsalede = -1;
-                    }
+                    pawnValidator(legalMove, desColumn, startRow, desRow, startColumn);
                     break;
                 case 1:
                     legalMove = rockObject.legalMove(startRow, startColumn, desRow, desColumn, cellMatrix.getPlayerMatrix());
@@ -307,10 +255,6 @@ public class windowChessBoard extends objChessBoard //implements MouseListener, 
                         }
                     }
                 }
-
-
-
-
             }
 
             admin.almacenarJugada(pieceBeingDragged, startRow, startColumn, desRow, desColumn, flagEnroque);
@@ -342,8 +286,8 @@ public class windowChessBoard extends objChessBoard //implements MouseListener, 
             if (cellMatrix.checkWinner(currentPlayer))
             {
                 hasWon = true;
-
-
+                // para guardar el último tablero 
+                admin.guardarTablero(cellMatrix.getPieceMatrix(), cellMatrix.getPlayerMatrix());
             }
             else if (legalMove)
             {
@@ -480,10 +424,60 @@ public class windowChessBoard extends objChessBoard //implements MouseListener, 
         while (canPass == false);
 
         cellMatrix.setPieceCell(newDesRow, newDesColumn, newPiece);
-
-
     }
 
+    private void pawnValidator(boolean legalMove, int desColumn, int startRow, int desRow, int startColumn)
+    {
+        if (legalMove && elpeonsalede == desColumn)
+        {
+            if (startRow + 1 == desRow && desRow == 2)
+            {
+                if (currentPlayer == 1)
+                {
+                    cellMatrix.setPieceCell(desRow - 1, desColumn, 6);
+                    cellMatrix.setPlayerCell(desRow - 1, desColumn, 0);
+                }
+                else if (desRow == 5)
+                {
+                    if (currentPlayer == 2)
+                    {
+                        cellMatrix.setPieceCell(desRow - 1, desColumn, 6);
+                        cellMatrix.setPlayerCell(desRow - 1, desColumn, 0);
+                    }
+                }
+            }
+            else
+            {
+                if (startRow - 1 == desRow && desRow == 2)
+                {
+                    if (currentPlayer == 1)
+                    {
+                        cellMatrix.setPieceCell(desRow + 1, desColumn, 6);
+                        cellMatrix.setPlayerCell(desRow + 1, desColumn, 0);
+                    }
+                    else if (desRow == 5)
+                    {
+                        if (currentPlayer == 2)
+                        {
+                            cellMatrix.setPieceCell(desRow + 1, desColumn, 6);
+                            cellMatrix.setPlayerCell(desRow + 1, desColumn, 0);
+                        }
+                    }
+                }
+            }
+        }
+        if (legalMove && (startRow + 2 == desRow || startRow - 2 == desRow))
+        {
+            salidapeon = true;
+            elpeonsalede = startColumn;
+        }
+        else
+        {
+            salidapeon = false;
+            elpeonsalede = -1;
+        }
+    }
+    
     /**
      * Reubica una pieza luego de un movimiento Errado
      *
@@ -563,5 +557,20 @@ public class windowChessBoard extends objChessBoard //implements MouseListener, 
     void problemBoard(int i)
     {
         chessPuzzles(i);
+    }
+    
+    public int getCurrentPlayer()
+    {
+        return currentPlayer;
+    }
+
+    public void setStartColumn(int startColumn)
+    {
+        this.startColumn = startColumn;
+    }
+
+    public void setStartRow(int startRow)
+    {
+        this.startRow = startRow;
     }
 }

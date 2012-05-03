@@ -30,7 +30,7 @@ public class Jaque
     private int xKing;
     private int yKing;
     
-    private int idiota;
+    private int numAtacantes;
     //-----------------
     // Constructor
     //------------------
@@ -48,6 +48,7 @@ public class Jaque
         kingObject  = new objKing();
         this.cellMatrix   = cellMatrix;
         atacantes    = new ArrayList<String>();
+        numAtacantes = 0;
         xKing = 0;
         yKing = 0;
     }
@@ -106,7 +107,7 @@ public class Jaque
      */
     public boolean canBecapture(int currentPlayer, int xKing, int yKing, boolean RecolectarAtacantes, objCellMatrix cellMatrix, boolean Jaque)
     {
-        idiota = 0;
+        numAtacantes = 0;
         boolean canBecapture = false;
         // Vamos encontrando cada ficha y determinaremos si estan en alguna posición
         // Ataca al rey del currentPlayer
@@ -130,7 +131,7 @@ public class Jaque
                         }
                         System.out.println("  Es intersectada por " +i + "" + j);
                         canBecapture = true;
-                        ++idiota;
+                        ++numAtacantes;
                     }
                 }
             }
@@ -143,9 +144,9 @@ public class Jaque
         return (ply == 1)? 2 : 1;
     }
     
-     public int getIdiota()
+     public int getNumAtacantes()
      {
-         return idiota;
+         return numAtacantes;
      }
     /**
      * Verifica si un ficha en la piscion (i,j) puede atacar a (xKing, yKing)

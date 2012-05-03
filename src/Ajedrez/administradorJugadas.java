@@ -3,23 +3,23 @@
  * and open the template in the editor.
  */
 package Ajedrez;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 /**
  *
  * @author mandrescc
  */
-public class administradorJugadas 
+public class administradorJugadas
 {
     //-----------------------------
     // Constantes
     //-----------------------------
-    private final String fichas=" TCADR";
-    
+
+    private final String fichas = " TCADR";
     //-----------------------------
     // Variables
     //-----------------------------
@@ -56,126 +56,143 @@ public class administradorJugadas
     //-----------------------------
     // Constructor
     //-----------------------------
+
     administradorJugadas()
     {
-        historialJugadas=new ArrayList();
-        
-        texto1 = new JTextArea("",20,5);
+        historialJugadas = new ArrayList();
+
+        texto1 = new JTextArea("", 20, 5);
         texto1.setBackground(Color.WHITE);
         texto1.setForeground(Color.BLACK);
         texto1.setEditable(false);
-        
-        texto2 = new JTextArea("",20,5);
+
+        texto2 = new JTextArea("", 20, 5);
         texto2.setBackground(Color.BLACK);
         texto2.setForeground(Color.WHITE);
         texto2.setEditable(false);
     }
 
-    public administradorJugadas(ArrayList<String> historialJugadas) {
+    public administradorJugadas(ArrayList<String> historialJugadas)
+    {
         this.historialJugadas = historialJugadas;
     }
 
-    public void almacenarJugada(int pieceBeingDragged,int startRow,int startColumn,int newDesRow,int newDesColumn, int flagEnroque)
+    public void almacenarJugada(int pieceBeingDragged, int startRow, int startColumn, int newDesRow, int newDesColumn, int flagEnroque)
     {
         String jugada;
-        if (flagEnroque==1){
-            jugada="0-0";
-        } else if(flagEnroque==-1){
-            jugada="0-0-0";
-        }else{
-        jugada=fichas.charAt(pieceBeingDragged)+""+(char)(startColumn+97)+(8-startRow)+""+" "+fichas.charAt(pieceBeingDragged)+(char)(newDesColumn+97)+(8-newDesRow);
-        }historialJugadas.add(jugada);
+        if (flagEnroque == 1)
+        {
+            jugada = "0-0";
+        } else if (flagEnroque == -1)
+        {
+            jugada = "0-0-0";
+        } else
+        {
+            jugada = fichas.charAt(pieceBeingDragged) + "" + (char) (startColumn + 97) + (8 - startRow) + "" + " " + fichas.charAt(pieceBeingDragged) + (char) (newDesColumn + 97) + (8 - newDesRow);
+        }
+        historialJugadas.add(jugada);
         //System.out.println("Inicio: "+startRow+" "+startColumn);
         //System.out.println("Destino: "+newDesRow+" "+(char)(newDesColumn+97)+"\n Jugador "+currentPlayer);
 
     }
-        public void imprimirUltimaJugada(int [][] tablero, int jugadorActual)
-        {
-            if(jugadorActual == 1){
-            
-            texto1.setText(texto1.getText()+simplificador(historialJugadas.get(historialJugadas.size()-1),tablero)+"\n");
-            
-            }
-            
-            else 
-            texto2.setText(texto2.getText()+simplificador(historialJugadas.get(historialJugadas.size()-1),tablero)+"\n");
-            
-        }
-        
-        public static JTextArea obtenerTexto1(){
-        
-            return texto1;
-        }
-        
-        public static JTextArea obtenerTexto2(){
-        
-            return texto2;
-        }
-        
-        public static void asignarTexto1(String s){texto1.setText(s);}
-        public static void asignarTexto2(String s){texto2.setText(s);}
-        
-        private String simplificador(String jugada,int[][] tablero)
-        {
-            String decodificador="";
-            if (jugada.equals("0-0-0")||jugada.equals("0-0")) {return jugada;}
-            String decodificacion=decodificadorPanel(jugada).substring(decodificadorPanel(jugada).length()-3);
 
-                    int y=(int)decodificacion.charAt(0)-49;
-                    int x=Math.abs(8-((int)decodificacion.charAt(1)-48));
-
-           // JOptionPane.showMessageDialog(texto1, x+" "+y);
-            if (tablero[x][y]==0)
-            {
-                decodificador=jugada.substring(jugada.length()-3, jugada.length());
-            }
-            else
-            {
-               decodificador= jugada.substring(jugada.length()-3, jugada.length()-2) +"x"+jugada.substring(jugada.length()-2, jugada.length());
-            }
-            /*
-            for (int i=0; i<tablero.length ; i++)
-            {
-                for (int j=0; j<tablero.length ; j++)
-                {
-                    System.out.print(tablero[i][j]);
-                }
-                System.out.println();
-            }
-                */
-                
-            
-            return decodificador;
-        }
-        
-        public String decodificadorPanel(String jugada)
+    public void imprimirUltimaJugada(int[][] tablero, int jugadorActual)
+    {
+        if (jugadorActual == 1)
         {
-            if (jugada.equals("0-0-0")||jugada.equals("0-0")) {return jugada;}
-            String decodificador="";            
-            StringTokenizer token = new StringTokenizer(jugada);
-            for(int i=0;token.hasMoreElements();i++)
-            {
-                String temp= token.nextToken();
-                if(temp.length()==2)
-                {
-                    temp=" "+temp;
-                }
-                for(int j=0;j<fichas.length();j++)
-                {
-                    if (temp.charAt(0)==fichas.charAt(j))
-                    {
-                        decodificador+=j;
-                        break;
-                    }
-                }
-                //System.out.println("Prueba H "+(Character.valueOf('h')-96));
-                decodificador= decodificador+""+(Character.valueOf(temp.charAt(1))-96)+""+temp.charAt(2)+" ";
-                
-            }
-            return decodificador;
+
+            texto1.setText(texto1.getText() + simplificador(historialJugadas.get(historialJugadas.size() - 1), tablero) + "\n");
+
+        } else
+        {
+            texto2.setText(texto2.getText() + simplificador(historialJugadas.get(historialJugadas.size() - 1), tablero) + "\n");
         }
-        
-        /**
+
+    }
+
+    public static JTextArea obtenerTexto1()
+    {
+
+        return texto1;
+    }
+
+    public static JTextArea obtenerTexto2()
+    {
+
+        return texto2;
+    }
+
+    public static void asignarTexto1(String s)
+    {
+        texto1.setText(s);
+    }
+
+    public static void asignarTexto2(String s)
+    {
+        texto2.setText(s);
+    }
+
+    private String simplificador(String jugada, int[][] tablero)
+    {
+        String decodificador = "";
+        if (jugada.equals("0-0-0") || jugada.equals("0-0"))
+        {
+            return jugada;
+        }
+        String decodificacion = decodificadorPanel(jugada).substring(decodificadorPanel(jugada).length() - 3);
+
+        int y = (int) decodificacion.charAt(0) - 49;
+        int x = Math.abs(8 - ((int) decodificacion.charAt(1) - 48));
+
+        // JOptionPane.showMessageDialog(texto1, x+" "+y);
+        if (tablero[x][y] == 0)
+        {
+            decodificador = jugada.substring(jugada.length() - 3, jugada.length());
+        } else
+        {
+            decodificador = jugada.substring(jugada.length() - 3, jugada.length() - 2) + "x" + jugada.substring(jugada.length() - 2, jugada.length());
+        }
+        /*
+         * for (int i=0; i<tablero.length ; i++) { for (int j=0;
+         * j<tablero.length ; j++) { System.out.print(tablero[i][j]); }
+         * System.out.println(); }
+         */
+
+
+        return decodificador;
+    }
+
+    public String decodificadorPanel(String jugada)
+    {
+        if (jugada.equals("0-0-0") || jugada.equals("0-0"))
+        {
+            return jugada;
+        }
+        String decodificador = "";
+        StringTokenizer token = new StringTokenizer(jugada);
+        for (int i = 0; token.hasMoreElements(); i++)
+        {
+            String temp = token.nextToken();
+            if (temp.length() == 2)
+            {
+                temp = " " + temp;
+            }
+            for (int j = 0; j < fichas.length(); j++)
+            {
+                if (temp.charAt(0) == fichas.charAt(j))
+                {
+                    decodificador += j;
+                    break;
+                }
+            }
+            //System.out.println("Prueba H "+(Character.valueOf('h')-96));
+            decodificador = decodificador + "" + (Character.valueOf(temp.charAt(1)) - 96) + "" + temp.charAt(2) + " ";
+
+        }
+        return decodificador;
+    }
+
+    /**
      * Convierte las columnas de notación algebraica a números Ejemplos: 'A' ->
      * 0, 'B'-> 1, 'C'->2 , 'H'-> 7 resulmen: [A,H] -> [0,7]
      *
@@ -186,11 +203,11 @@ public class administradorJugadas
     {
         return (charToint(parse)) - 97;
     }
-        
-        /**
+
+    /**
      * Dada una serie de jugadas en notación algebraica, retorna su equivalente
-     * en notación matricial
-     * Ejemplos: "e2" -> "06 4" , 
+     * en notación matricial Ejemplos: "e2" -> "06 4" ,
+     *
      * @param jugada
      * @return
      */
@@ -221,7 +238,7 @@ public class administradorJugadas
         }
         return decodificador;
     }
-    
+
     /**
      * Convierte las coordenadas de un tablero a coordenadas de una matriz
      * (numericas)
@@ -245,17 +262,19 @@ public class administradorJugadas
         }
         return "";
     }
-        
-        private void limpiarMatriz(int[][] matriz,int criterioVaciado)
+
+    private void limpiarMatriz(int[][] matriz, int criterioVaciado)
+    {
+        for (int i = 0; i < matriz.length; i++)
         {
-            for(int i=0;i<matriz.length;i++){
-                for(int j=0;j<matriz[i].length;j++){
-                    matriz[i][j]=criterioVaciado;
-                }
+            for (int j = 0; j < matriz[i].length; j++)
+            {
+                matriz[i][j] = criterioVaciado;
             }
         }
-        
-        /**
+    }
+
+    /**
      * La invocación se hace de este modo: La primera letra del nombre de la
      * ficha en mayusculas, seguido de las coordenadas en notación algebraica,
      * las grupos de fichas de los jugadores estan separados por un salto de
@@ -285,9 +304,9 @@ public class administradorJugadas
                 cellpieceMatrix[charToint(Ficha.charAt(1))][charToint(Ficha.charAt(3))] = t; // Asignele la ficha
             }
         }
-        cout ("Entro");
+        cout("Entro");
     }
-    
+
     /**
      * Convierte literalmente un caracter a un entero<br> ejemplos: '1' -> 1
      * <br> '8' -> 8 <br> De caracter a entero, toda letra es minuscula
@@ -301,16 +320,80 @@ public class administradorJugadas
         if (Character.isDigit(pars))
         {
             return Character.valueOf(pars) - 48;
-        } 
-        else
+        } else
         {
             return Character.valueOf(pars);
         }
     }
-    
+
+    /**
+     * Guarda el tablero en dos arreglos, el primero para las blancas, el
+     * segundo para las negras
+     *
+     * @param cellpieceMatrix
+     * @param cellplayerMatrix
+     */
+    public void guardarTablero(int[][] cellpieceMatrix, int[][] cellplayerMatrix)
+    {
+        ArrayList<String> set1 = new ArrayList<String>();
+        ArrayList<String> set2 = new ArrayList<String>();
+        for (int i = 0; i < cellpieceMatrix.length; i++)
+        {
+            for (int j = 0; j < cellpieceMatrix.length; j++)
+            {
+                if (cellpieceMatrix[i][j] != 6)
+                {
+                    // blancas
+                    if (cellplayerMatrix[i][j] == 1)
+                    {
+                        set1.add(fichas.charAt(cellpieceMatrix[i][j]) + "" + reverse(MatrizTotablero(i + " " + j)));
+                    } else
+                    {
+                        set2.add(fichas.charAt(cellpieceMatrix[i][j]) + "" + reverse(MatrizTotablero(i + " " + j)));
+                    }
+                }
+            }
+        }
+        /*
+         * System.out.println("[Saving]"); for (String h : set1)
+         * System.out.print(h+" "); System.out.println(" "); for (String h :
+         * set2) System.out.print(h+" "); System.out.println("[Saved]");
+         *
+         */
+    }
+
+    /**
+     * Convierte las coordenadas de una matriz a coordenadas de tablero
+     * (numericas)
+     *
+     * @param coordenadasMatriz
+     * @return coordenadasTablero
+     */
+    public String MatrizTotablero(String coordenadas)
+    {
+        // {(x y) | x,y e [1,8]} -> {(x y) | x,y e [1,8]}
+        assert coordenadas.length() == 3;
+        return matrizConversion[charToint(coordenadas.charAt(0))][charToint(coordenadas.charAt(2))];
+    }
+
+    private String reverse(String MatrizTotablero)
+    {
+        return (intTochessColumn(charToint(MatrizTotablero.charAt(0)) - 1)) + "" + MatrizTotablero.charAt(2);
+    }
+
+    /**
+     * Convierte los números en notación matricial [0,7] a caracteres [A,H]
+     *
+     * @param parse
+     * @return
+     */
+    public static char intTochessColumn(int parse)
+    {
+        return (char) (parse + 97);
+    }
+
     private void cout(String g)
     {
         System.out.println(g);
     }
-        
 }

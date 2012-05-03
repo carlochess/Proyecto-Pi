@@ -15,24 +15,11 @@ public class JaqueMate
     // Atributos
     //-----------------
     
-    public objCellMatrix cellMatrixCopy;
-
-    public int currentPlayer;
-    
+    private objCellMatrix cellMatrixCopy;
+    private int currentPlayer;
     private ArrayList<String> atacantes;
-    
     private boolean statusTorre;
-    private boolean[] reyHaSidoMovido =
-    {
-        false, false
-    };
-    
-    private objPawn    pawnObject;
-    private objRock    rockObject;;
-    private objKnight  knightObject;
-    private objBishop  bishopObject;
-    private objQueen   queenObject;
-    private objKing    kingObject;
+    private boolean[] reyHaSidoMovido;
     private Jaque jaqueAdmin;
     //-----------------
     // Constructor
@@ -44,22 +31,16 @@ public class JaqueMate
         // Recibir currentPlayer
         this.currentPlayer = currentPlayer;
         // Hacer un ataud con esta función checkPieceCheck
-        pawnObject = new objPawn ();
-        rockObject = new objRock ();
-        knightObject = new objKnight ();
-        bishopObject = new objBishop();
-        queenObject = new objQueen  ();
-        kingObject = new objKing ();
         atacantes = new ArrayList<String> ();
         jaqueAdmin = new Jaque(cellMatrix);
+        reyHaSidoMovido = new boolean []{false, false};
     }
 
     //-----------------
     // Métodos
     //-----------------
-    
     /*
-     * Esta función
+     * Esta función verifica si existe un posible Jaque mate
      * @param 
      * @return 
      */
@@ -160,7 +141,7 @@ public class JaqueMate
         //cout("Ataca: "+ strtemp);
         //for (String g: casillas)
         //    cout (">> Casilla: " + g);
-        boolean t = false;
+        boolean veredicto = false;
         int tipoPieza = cellMatrixCopy.getPieceCell (xAttack, yAttack);
         // Si no es un {0,2,5} entonces...
         //0 peon, 1 torre, 2 caballo, 3 alfil, 4 reina, 5 rey, 6 empty
@@ -176,12 +157,12 @@ public class JaqueMate
                 if (jaqueAdmin.canBecapture(not(currentPlayer), x, y, false, cellMatrixCopy, false))
                 {
                     System.out.print(temp+" ");
-                    System.out.print("("+jaqueAdmin.getIdiota()+")");
-                    t = true;
+                    System.out.print("("+jaqueAdmin.getNumAtacantes()+")");
+                    veredicto = true;
                 }
             }
         }
-        return t;
+        return veredicto;
     }
     
     public int not(int ply)
@@ -201,7 +182,7 @@ public class JaqueMate
             int yAttack = Integer.parseInt (temp.substring (1, 2));
             if (jaqueAdmin.canBecapture(not(currentPlayer), xAttack, yAttack, false, cellMatrixCopy, false))
             {
-                System.out.print("("+jaqueAdmin.getIdiota()+")");
+                System.out.print("("+jaqueAdmin.getNumAtacantes()+")");
                 return true;
             }
         }
@@ -302,7 +283,9 @@ public class JaqueMate
             setCellMatrix(cellMatrix);
             jaqueAdmin = new Jaque(cellMatrix);
     }
-    
+    // -------------------
+    // Otras funciones [Borrar]
+    // ---------------------
     public void cout (ArrayList j)
     {
         for (int i=0; i< j.size();i++)
