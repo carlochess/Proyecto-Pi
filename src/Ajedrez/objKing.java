@@ -44,9 +44,7 @@ public class objKing extends objChessPieces {
     public boolean legalMove(int startRow, int startColumn, int desRow, int desColumn, int[][] playerMatrix, int currentPlayer, boolean statusTorre, boolean hasidomovida) 
     {
         
-        finalDesRow = desRow;
-        finalDesColumn = desColumn;
-     
+
         boolean movimientoLegal=false;
 
         // Se mueve en sentido Horario.

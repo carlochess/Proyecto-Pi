@@ -43,7 +43,7 @@ public class objCreateAppletImage {
     /**
      * Esta vacia.
      */
-    public void objCreateAppletImage() {
+    public  objCreateAppletImage() {
     }
     /**
      * Get del mensaje de error

@@ -5,22 +5,22 @@ package Ajedrez;
 */
 public class objPawn extends objChessPieces {
     /**
-	 * Constructor de la clase Caballo
-	*/
+     * Constructor de la clase Caballo
+    */
     public void objPawn() {
     }
     /**
-	 * Dada las coordenadas iniciales y finales,
-	 * verifica si el movimiento realizado es válido
-	 *
-	 * @param  startRow  Fila inicial
-	 * @param  startColumn Columna inicial
-	 * @param desRow Fila a llegar
-	 * @param desColumn Columna a llegar
-	 * @param playerMatrix La matriz del jugador 
-	 * @return Si es posible o no mover esta ficha
- 	*/
-    public boolean legalMove(int startRow, int startColumn, int desRow, int desColumn, int[][] playerMatrix, int currentPlayer) {
+     * Dada las coordenadas iniciales y finales,
+     * verifica si el movimiento realizado es válido
+     *
+     * @param  startRow  Fila inicial
+     * @param  startColumn Columna inicial
+     * @param desRow Fila a llegar
+     * @param desColumn Columna a llegar
+     * @param playerMatrix La matriz del jugador 
+     * @return Si es posible o no mover esta ficha
+    */
+    public boolean legalMove(int startRow, int startColumn, int desRow, int desColumn, int[][] playerMatrix, int currentPlayer, boolean salidapeon, int elpeonsalede) {
         
         boolean legalMove = true;
         int[] playerPawnStart = {6,1};
@@ -43,7 +43,12 @@ public class objPawn extends objChessPieces {
                 {
                      
                 // Valida si el avance ha sido de una sola casilla (Sabemos que el avance es hacia abajo o hacia arriba)
-                    if ((desRow == (startRow + 1) && currentPlayer == 2) || (desRow == (startRow - 1) && currentPlayer == 1)) {
+                    if ((desRow == (startRow + 1) && currentPlayer == 2) || (desRow == (startRow - 1) && currentPlayer == 1)) 
+                    {
+                        if(salidapeon&&desColumn==elpeonsalede&&(desRow==2||desRow==5))
+                        {
+                            legalMove=true;
+                        } else
                         
                     if (playerMatrix[desRow][desColumn] == 0)
                         {
@@ -59,9 +64,9 @@ public class objPawn extends objChessPieces {
                     strErrorMsg = "No puedes mover hacia adelante o hacia arriba";
                     legalMove = false;
                     
-                }
+                    }
                 
-            }
+                }
             
                 else {
                 
@@ -71,10 +76,12 @@ public class objPawn extends objChessPieces {
             }
             
         }
-        else if ((currentPlayer == 1 && desRow < (startRow - 1)) || (currentPlayer == 2 && desRow > (startRow + 1))) //If moved two or more places
+        
+         //If moved two or more places
+        else if ((currentPlayer == 1 && desRow < (startRow - 1)) || (currentPlayer == 2 && desRow > (startRow + 1)))
         {
-            
-            if ((currentPlayer == 1 && desRow == (startRow - 2)) || (currentPlayer == 2 && desRow == (startRow + 2))) //If moved two places
+            //If moved two places
+            if ((currentPlayer == 1 && desRow == (startRow - 2)) || (currentPlayer == 2 && desRow == (startRow + 2))) 
             {
                 
                 if (playerPawnStart[currentPlayer - 1] != startRow) 
@@ -85,6 +92,25 @@ public class objPawn extends objChessPieces {
                     
                 }
                 
+                if (playerMatrix[desRow][desColumn] != 0)
+            {
+                    
+                
+                strErrorMsg = "No puedes mover hacia adelante estando bloqueada la casilla";
+                legalMove = false;
+            }
+                
+                else if(playerMatrix[desRow-1][desColumn] !=0 && currentPlayer == 2)
+                {
+                    strErrorMsg = "No puedes mover dos casillas hacia adelante con una ficha bloqueando";
+                    legalMove = false;
+                }
+                else if (playerMatrix[desRow+1][desColumn]!=0 && currentPlayer == 1)
+                {
+                    strErrorMsg = "No puedes mover dos casillas hacia adelante con una ficha bloqueando";
+                    legalMove = false;
+                }
+                
             } else {
                 
                 strErrorMsg =  "No se puede mover de esa manera";
@@ -93,23 +119,16 @@ public class objPawn extends objChessPieces {
             }
             
         }
-        // Dado que se ha movido estrictamente hacia adelante.
-            else if ((desRow == (startRow + 1) && currentPlayer == 2) || (desRow == (startRow - 1) && currentPlayer == 1))
-            {
-
-                // Si no esta ocupada la casilla entonces...
-                if (playerMatrix[desRow][desColumn] != 0)
-                {
-                    strErrorMsg = "No puedes mover hacia adelante estando bloqueada la casilla";
-                    legalMove = false;
-                }
-            }
         
-        if (legalMove) {
-            
-            finalDesRow = desRow;
-            finalDesColumn = desColumn;
-            
+        else if ((desRow == (startRow + 1) && currentPlayer == 2) || (desRow == (startRow - 1) && currentPlayer == 1))
+        {
+
+            // Si no esta ocupada la casilla entonces...
+            if (playerMatrix[desRow][desColumn] != 0)
+            {
+                strErrorMsg = "No puedes mover hacia adelante estando bloqueada la casilla";
+                legalMove = false;
+            }
         }
         
         return legalMove;

@@ -3,10 +3,11 @@ package Ajedrez;
 
 import java.awt.*;
 import java.util.Vector;
+import javax.swing.JPanel;
 /**
  * Dibuja y Pinta el Tablero de Ajedrez
 */
-public class objChessBoard extends Canvas {
+public class objChessBoard extends JPanel {
     
     protected objPaintInstruction currentInstruction = null;
     protected Vector vecPaintInstructions = new Vector();
@@ -33,19 +34,20 @@ public class objChessBoard extends Canvas {
         
         if (vecPaintInstructions.size() == 0) {
             
-            g.setColor(new Color(75,141,221)); //Estable los colores al tablero
-            g.fillRect(0,0,500,50);//Borde norte
-            g.fillRect(0,0,50,500);//Oeste
-            g.fillRect(0,450,500,50);//Sur
-            g.fillRect(450,0,50,500);//este
+            g.setColor(new Color(30,10,0)); //Establece los colores al tablero
+            g.fillRect(50,20,400,30);//Borde norte
+            g.fillRect(20,20,30,460);//Oeste
+            g.fillRect(50,450,400,30);//Sur
+            g.fillRect(450,20,30,460);//este
             
             currentInstruction = new objPaintInstruction(0,0,8);
             vecPaintInstructions.addElement(currentInstruction);
             
         }
         
-        g.setColor(new Color(75,141,221));
-        g.fillRect(50,450,450,50);
+        g.setColor(new Color(40,40,40));//75,141,221 ( El azulito inicial)
+        // Este rectangulo se usa para que los strings no queden uno encima del otro!!!
+        //g.fillRect(40,510,800,50); 
         
         for (int i = 0; i < vecPaintInstructions.size(); i++) {
             
@@ -69,7 +71,7 @@ public class objChessBoard extends Canvas {
         
     }
     /**
-	 * No se que hace
+	 * Pinta los colores de los cuadros del tablero
 	 *
 	*/
     private void drawTile(int row, int column, Graphics g) {
@@ -77,17 +79,17 @@ public class objChessBoard extends Canvas {
         if ((row + 1) % 2 == 0) {
             
             if ((column + 1) % 2 == 0) {
-                g.setColor(new Color(255,255,255));
+                g.setColor(new Color(139,69,19)); // Era negro 
             } else {
-                g.setColor(new Color(0,0,0));
+                g.setColor(new Color(222,184,135)); // Era blanco 
             }
             
         } else {
             
             if ((column + 1) % 2 == 0) {
-                g.setColor(new Color(0,0,0));
+                g.setColor(new Color(222,184,135)); // era blanco
             } else {
-                g.setColor(new Color(255,255,255));
+                g.setColor(new Color(139,69,19)); // era negro
             }
             
         }

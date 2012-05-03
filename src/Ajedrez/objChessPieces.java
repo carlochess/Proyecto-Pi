@@ -4,8 +4,7 @@ public class objChessPieces {
     /**
      * Atributos */
 
-    protected int finalDesRow = 0;
-    protected int finalDesColumn = 0;
+    
     /**
      * Mensaje de error que se mostrara cuando no se pueda ejecutar algo
      */
@@ -148,30 +147,16 @@ public class objChessPieces {
     protected boolean axisMove(int startRow, int startColumn, int desRow, int desColumn, int[][] playerMatrix, boolean straightAxis) {
         
         if (validador(straightAxis, startColumn, desColumn, startRow, desRow, playerMatrix)) return false;
-        
+        /*
         finalDesRow = desRow;
         finalDesColumn = desColumn;
-        
+        */
         return true;
         
     }
 
 
-    /**
-     * Getter del DesRow
-     * @return finalDesRow
-     */
-    public int getDesRow() {
-        return finalDesRow;
-    }
-
-    /**
-     * Getter del DesColumn
-     * @return finalDesColumn
-     */
-    public int getDesColumn() {
-        return finalDesColumn;
-    }
+   
 
     /**
      * Getter del Mensaje de error
