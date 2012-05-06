@@ -110,11 +110,19 @@ public class ventanaInicio
            ventanaInicio aplicacion = new ventanaInicio(); 
            aplicacion.iterate();
         }
-        else
+        else if (args.length==2)
         {
             Tablero mainChessBoard = new Tablero();
             mainChessBoard.newGameConsole(args[0], args[1].equalsIgnoreCase("true"));
             mainChessBoard.setVisible(true);
+        }
+        else if (args.length>2)
+        {
+            System.out.println("Argumentos mal formados [Exceso]");
+        }
+        else
+        {
+            System.out.println("Argumentos mal formados [Déficit]");
         }
     }
 }

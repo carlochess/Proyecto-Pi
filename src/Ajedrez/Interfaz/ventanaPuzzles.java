@@ -14,6 +14,7 @@ public class ventanaPuzzles implements ActionListener{
     private final UIManager.LookAndFeelInfo apariencias[];
     
     private Tablero mainChessBoard;
+
     private ObjCreateAppletImage createImage;
     private String[] strRedPieces = {"bluePawn.png","blueRock.png","blueKnight.png","blueBishop.png","blueQueen.png","blueKing.png"};
     private String[] strBluePieces = {"redPawn.png","redRock.png","redKnight.png","redBishop.png","redQueen.png","redKing.png"};
@@ -207,5 +208,8 @@ public class ventanaPuzzles implements ActionListener{
            }
         }
     }
-  
+    public Tablero getMainChessBoard()
+    {
+        return mainChessBoard;
+    }
 }

@@ -1,11 +1,7 @@
 package Ajedrez.Interfaz;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
@@ -36,7 +32,7 @@ public class ventanaMenu {
         PanelFondo imagen = new PanelFondo(200,400,imagen1);
         
         grupoBotonesOpcion = new ButtonGroup();
-        opcion1 = new JRadioButton("Player Vs IA",false);
+        opcion1 = new JRadioButton("Ps Vs Pc",false);
         opcion1.setForeground(Color.WHITE);
         opcion2 = new JRadioButton("Partida online",false);
         opcion2.setForeground(Color.WHITE);
@@ -127,9 +123,10 @@ public class ventanaMenu {
         }else if(opcion2.isSelected()){
             
         }else if(opcion3.isSelected()){
-            ventanaPuzzles aplicacion2 = new ventanaPuzzles();
+            //ventanaPuzzles aplicacion2 = new ventanaPuzzles();
+            ventanaMenuPuzzles apliacion2 = new ventanaMenuPuzzles();
         }else{
-            VentanaPrincipal aplicacion3 = new VentanaPrincipal();
+            ventanaPrueba aplicacion3 = new ventanaPrueba();
         }
     }
 }

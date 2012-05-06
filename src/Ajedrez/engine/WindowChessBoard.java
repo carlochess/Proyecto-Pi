@@ -169,7 +169,6 @@ public class WindowChessBoard extends ObjChessBoard //implements MouseListener, 
      */
     public void checkMove(int startRow, int startColumn, int desRow, int desColumn, int pieceBeingDragged)
     {
-
         boolean legalMove = false;
         int enroque = 0;
         int piezaposeedora = cellMatrix.getPieceCell(desRow, desColumn);
@@ -257,6 +256,7 @@ public class WindowChessBoard extends ObjChessBoard //implements MouseListener, 
                         }
                     }
                 }
+                
             }
 
             admin.almacenarJugada(pieceBeingDragged, startRow, startColumn, desRow, desColumn, flagEnroque);
@@ -290,10 +290,14 @@ public class WindowChessBoard extends ObjChessBoard //implements MouseListener, 
                 hasWon = true;
                 // para guardar el último tablero 
                 admin.guardarTablero(cellMatrix.getPieceMatrix(), cellMatrix.getPlayerMatrix());
+                admin.obtenerTexto1().setText("");
+                admin.obtenerTexto2().setText("");
+                
+                
             }
             else if (legalMove)
             {
-                // Cabia de jugador si naide ha ganado.
+                // Cambia de jugador si naide ha ganado.
                 // 1 para Jugador Humano
                 // 2 para Jugador AI
                 if (currentPlayer == 1)
@@ -310,35 +314,10 @@ public class WindowChessBoard extends ObjChessBoard //implements MouseListener, 
         }
         else
         {
-            // Si por el contrario, la ficha ha sido movida de forma indebida, aparecerá
-            // Un mensaje de error especifico para esa ficha
-            switch (pieceBeingDragged)
-            {
-
-                case 0:
-
-                    break;
-                case 1:
-
-                    break;
-                case 2:
-
-                    break;
-                case 3:
-
-                    break;
-                case 4:
-
-                    break;
-                case 5:
-
-                    break;
-
-            }
-
             unsucessfullDrag(startRow, startColumn, pieceBeingDragged, currentPlayer);
-
         }
+        // Verificar la existencia de un Jaque al finalizar la Jugada
+        // ORGANIZAR!!
         adminJaque.setCellMatrix(cellMatrix);
         if (adminJaque.checkCheck(-1, -1, currentPlayer))
         {
@@ -352,22 +331,17 @@ public class WindowChessBoard extends ObjChessBoard //implements MouseListener, 
                 System.out.println("Jaque mate");
             }
         }
+
+            
+                
+        
     }
 
     private void recojerDatosJaque()
     {
         atacantes = adminJaque.getAtacantes();
-//        if (atacantes == null)
-//        {
-//            //cout("atacantes NIL");
-//        }
         xKing = adminJaque.getxKing();
         yKing = adminJaque.getyKing();
-//        for (String g : atacantes)
-//        {
-//            cout(g);
-//        }
-//        cout("");
     }
 
 //    private void cout(String g)
@@ -533,12 +507,13 @@ public class WindowChessBoard extends ObjChessBoard //implements MouseListener, 
 
     public void printBoard()
     {
-        String fichas = "PTCADR ";
-        for (int [] a : cellMatrix.getPieceMatrix() )
+        String fichasN = "PTCADR.";
+        String fichasB = "ptcadr.";
+        for (int i=0; i<cellMatrix.getPieceMatrix().length ; i++)
         {
-            for (int j : a)
+            for (int j=0; j<cellMatrix.getPieceMatrix()[i].length ; j++)
             {
-                System.out.print(fichas.charAt(j)+" ");
+                System.out.print((cellMatrix.getPlayerCell(i, j) == 2)? fichasB.charAt(cellMatrix.getPieceCell(i, j)) +" " : fichasN.charAt(cellMatrix.getPieceCell(i, j)) +" ");
             }
             System.out.println("");
         }

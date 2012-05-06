@@ -20,6 +20,7 @@ public class AdminJugadas
     //-----------------------------
 
     private final String fichas = " TCADR";
+    static String recopilacionJugadas = "Jugadas \n";
     //-----------------------------
     // Variables
     //-----------------------------
@@ -99,10 +100,11 @@ public class AdminJugadas
         {
 
             texto1.setText(texto1.getText() + simplificador(historialJugadas.get(historialJugadas.size() - 1), tablero) + "\n");
-
+            recopilacionJugadas += simplificador(historialJugadas.get(historialJugadas.size() - 1), tablero) + " ";
         } else
         {
             texto2.setText(texto2.getText() + simplificador(historialJugadas.get(historialJugadas.size() - 1), tablero) + "\n");
+            recopilacionJugadas += simplificador(historialJugadas.get(historialJugadas.size() - 1), tablero) + "\n";
         }
 
     }
@@ -454,8 +456,5 @@ public class AdminJugadas
         }
     }
     
-//    private void cout(String g)
-//    {
-//        System.out.println(g);
-//    }
+    public String obtenerRecopilacion(){return recopilacionJugadas;}
 }

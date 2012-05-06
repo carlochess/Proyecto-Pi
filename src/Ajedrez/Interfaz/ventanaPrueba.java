@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-public class VentanaPrincipal implements ActionListener{
+public class ventanaPrueba implements ActionListener{
     
     private JFrame ventana;
     private final UIManager.LookAndFeelInfo apariencias[];
@@ -36,7 +36,7 @@ public class VentanaPrincipal implements ActionListener{
     
     private final ImageIcon fondo = new ImageIcon(PanelFondo.class.getResource("/images/wood.jpg"));
     
-    VentanaPrincipal(){
+    ventanaPrueba(){
          
         ventana = new JFrame();
         ventana.setLayout(new BorderLayout());
@@ -96,16 +96,24 @@ public class VentanaPrincipal implements ActionListener{
         TitledBorder bordeMovimientos = new TitledBorder("Movimientos");
         bordeMovimientos.setTitleColor(Color.white);
         panelInterno2.setBorder(bordeMovimientos);
+        
         JPanel panelInterno4 = new JPanel(new GridLayout(1,2));
         panelInterno4.setOpaque(false);
+        
         barraDesp1 = new JScrollPane(mainChessBoard.admin.obtenerTexto1());
         barraDesp1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         panelInterno4.add(barraDesp1);
+        
         barraDesp2 = new JScrollPane(mainChessBoard.admin.obtenerTexto2());
         barraDesp2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         panelInterno4.add(barraDesp2);
-        panelInterno2.add(panelInterno4);
+        
+        JPanel panelInterno5 = new JPanel(new GridLayout(1,2));
+        
+        
         panelInterno2.add(etiqueta1, BorderLayout.NORTH);
+        panelInterno2.add(panelInterno4, BorderLayout.CENTER);
+        panelInterno2.add(panelInterno5, BorderLayout.SOUTH);
         panel2.add(panelInterno2);
         
         TitledBorder bordeAjedrez = new TitledBorder("Ajedrez");
@@ -220,8 +228,38 @@ public class VentanaPrincipal implements ActionListener{
         
         JMenu ayuda = new JMenu("Ayuda");
         ayuda.setMnemonic('y');
+        
+        JMenuItem mostrarJugadas = new JMenuItem("Mostrar Jugadas"); 
+        mostrarJugadas.addActionListener(
+                new ActionListener()
+                {
+
+                    @Override
+                    public void actionPerformed(ActionEvent evento)
+                    {
+                        JFrame jugadas = new JFrame();
+                        jugadas.setSize(300, 400);
+                        jugadas.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        jugadas.setLayout(new BorderLayout());
+                        
+                        JTextArea texto = new JTextArea();
+                        texto.setEditable(false);
+                        
+                        texto.setText(mainChessBoard.admin.obtenerRecopilacion());
+                        System.out.println(mainChessBoard.admin.obtenerRecopilacion());
+                        
+                        jugadas.add(mainChessBoard.admin.obtenerTexto1(),BorderLayout.EAST);
+                        jugadas.add(mainChessBoard.admin.obtenerTexto2(),BorderLayout.WEST);
+                        
+                        jugadas.add(texto, BorderLayout.CENTER);
+                        jugadas.setVisible(true);
+                    }
+                });
+        ayuda.add(mostrarJugadas);
+        
         JMenuItem acercaDe = new JMenuItem("Acerca de");
         ayuda.add(acercaDe);
+        
         
         //----------------------------------------------------------------------
         
